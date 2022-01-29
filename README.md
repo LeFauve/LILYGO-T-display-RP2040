@@ -8,22 +8,42 @@
 
 ## Arduino
 
->1. Open up the Arduino IDE and go to File->Preferences.
+>1. Open up the **Arduino IDE** and go to File->Preferences.
 >2. In the dialog that pops up, enter the following URL in the "Additional Boards Manager URLs" field:
-```
-https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
-```
+>```
+>https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
+>```
 > 3. Go to Tools->Boards->Board Manager in the IDE
 > 4. Type "pico" in the search box and select "Add":
-> 5. Copy  **TFT_eSPI**  to the  **<C:\Users\Your User Name\Documents\Arduino\libraries>**  directory
-> 6. Open **Arduino IDE,** find **TFT_eSPI** in the file and example, the **T-Display** factory test program is located at **TFT_eSPI -> FactoryTest**, you can also use other sample programs provided by TFT_eSPI
-> 7. In the **Arduino IDE** tool options, select the development board  **Raspbreey Pi Pico**, Other keep the default
-> 8. Hold down the BOOT button, click the reset button, and release the BOOT button after a delay of one second or after waiting for the computer to eject a new disk
-> 9. Finally, click upload or drag the firmware to the new disk
+> 5. Copy **TFT_eSPI** from the **https://github.com/Bodmer/TFT_eSPI** repository, copy the **TFT_eSPI.master** directory in the  **<C:\Users\Your User Name\Documents\Arduino\libraries>** directory and rename it into **TFT_eSPI**
+> 6. In the **<C:\Users\Your User Name\Documents\Arduino\libraries\TFT_eSPI>** folder, edit **User_Setup_Select.h** and uncomment the following line:
+> ```c
+> #include <User_Setups/Setup137_LilyGo_TDisplay_RP2040.h>
+> ```
+> 7. In the **<C:\Users\Your User Name\Documents\Arduino\libraries\TFT_eSPI>** folder, edit **User_Setup.h** and comment out the following line:
+> ```c
+> //#define ILI9341_DRIVER       // Generic driver for common displays
+> ```
+> 8. In the same file, comment out all lines defining pins (TFT_CS, TFT_DC, ...); this step is optional but will avoid compilation warnings  
+> 9. Copy the **firmware** folder from this repository in **<C:\Users\Your User Name\Documents\Arduino>**
+> 10. Open **Arduino IDE**, and open the **firmware** sketch
+> 11. Plug your LilyGO T-Display RP2040 into your computer
+> 12. In the **Arduino IDE** tool options, select the development board  **Raspberry Pi Pico**, and the port corresponding the LilyGO T-Display RP2040. Other keep the default
+> 13. Click to the "Upload" button (right arrow) on the **Arduino IDE**. The sketch should compile, and be sent to the LilyGO T-Display RP2040 (note there are a few seconds between the end of compilation and the actual uploading. Just wait)
 
-![](img/T-display-RP2040.jpg)
-![](img/DISPLAY_RP2040_details.jpg)
 
+**Remarks:**
+* You can also use other sample programs provided by TFT_eSPI with some minor changes (mostly changing the screen size and switching the backlight on with something like the following line)
+```c
+analogWrite(4, 255); // pin 4 controls the backlight; values between 0 (off) and 255 (full brightness) are accepted
+```
+* The **Raspberry Pi Pico** board accepts a maximum of 2MB of flash. You may use **Generic RP2040** instead if you want to use the whole 4MB of flash installed on the LilyGO T-Display RP2040
+* If you brick your LilyGO T-Display RP2040 (if it is no longuer showing up in port menu in Arduino IDE) you may do the following steps:
+  *   Hold down the BOOT button, click the reset button, and release the BOOT button after a delay of one second or after waiting for the computer to eject a new disk
+  *   A new USB drive with a size of 127MB should appear in your computer disks. Copy the **firmware.uf2** file from this repository on the new disk
+  *   After a few seconds, the drive should disapear and your LilyGO T-Display RP2040 should be back to factory state
+* You can use the above method to install any other arduino Sketch if you have compiled it as an uf2 file
+* If the Arduino IDE stays stuck after compilation and does not upload your sketch, try pressing Boot + Reset
 
 ## MicroPython
 
